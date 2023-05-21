@@ -1,6 +1,6 @@
-﻿#include "Logger.h"
+#include "Logger.h"
 
-Logger::LOG_LEVEL Logger::get_log_level() const
+inline Logger::LOG_LEVEL Logger::get_log_level() const
 {
 	return Logger::log_level;
 }
@@ -10,7 +10,7 @@ Logger::LOG_LEVEL Logger::set_log_level(LOG_LEVEL new_log_level)
 	return Logger::log_level = new_log_level;
 }
 
-Logger::LOG_MODE Logger::get_log_mode() const
+inline Logger::LOG_MODE Logger::get_log_mode() const
 {
 	return Logger::log_mode;
 }
@@ -107,7 +107,7 @@ bool Logger::Init_Logger()
     return true;
 }
 
-bool Logger::close_console_handle()
+bool Logger::close_console_handle() const
 {
 	if (get_console_handle() == INVALID_HANDLE_VALUE || get_console_handle() == NULL)
 		return true;
@@ -134,7 +134,6 @@ bool Logger::Shutdown_Logger()
 	if (log_file.is_open())
 		log_file.close();
 
-
 	return true;
 }
 
@@ -144,44 +143,40 @@ void Logger::Print_log(std::string text)
 	{
 		switch (Logger::get_log_level())
 		{
-		case LOG_ALL:
+		[[unlikely]] case LOG_ALL:
 			{	
 				std::cout << "{" << Logger::get_current_time() << "} " << "[";
 				SetConsoleTextAttribute(get_console_handle(), 9);
 				std::cout << "LOG_ALL";
 				SetConsoleTextAttribute(get_console_handle(), COLOR_WHITE);
 				std::cout << "]" << " >> " << text << ENDL;
-				auto temp_time = get_current_time();
+				const auto temp_time = get_current_time();
                 log_file << "{" + temp_time + "}" + "[" + "LOG_ALL" + "]" + " >> " + text << ENDL;
                 break;
-
 			}
 
-		case LOG_ERROR:
+		[[likely]] case  LOG_ERROR:
 			{
 				std::cout << "{" << Logger::get_current_time() << "} " << "[";
 				SetConsoleTextAttribute(get_console_handle(), COLOR_RED);
 				std::cout << "LOG_ERROR";
 				SetConsoleTextAttribute(get_console_handle(), COLOR_WHITE);
 				std::cout << "]" << " >> " << text << ENDL;
-				auto temp_time = get_current_time();
+				const auto temp_time = get_current_time();
                 log_file << "{" + temp_time + "}" + "[" + "LOG_ERROR" + "]" + " >> " + text << ENDL;
                 break;
-
-
 			}
 
-		case LOG_SUCCESSFUL:
+		[[likely]] case LOG_SUCCESSFUL:
 			{
 				std::cout << "{" << Logger::get_current_time() << "} " << "[";
 				SetConsoleTextAttribute(get_console_handle(), COLOR_GREEN);
 				std::cout << "LOG_SUCCESSFUL";
 				SetConsoleTextAttribute(get_console_handle(), COLOR_WHITE);
 				std::cout << "]" << " >> " << text << ENDL;
-				auto temp_time = get_current_time();
+				const auto temp_time = get_current_time();
                 log_file << "{" + temp_time + "}" + "[" + "LOG_SUCCESSFUL" + "]" + " >> " + text << ENDL;
                 break;
-
 			}
 
 		case LOG_WARNING:
@@ -191,10 +186,9 @@ void Logger::Print_log(std::string text)
 				std::cout << "LOG_WARNING";
 				SetConsoleTextAttribute(get_console_handle(), COLOR_WHITE);
 				std::cout << "]" << " >> " << text << ENDL;
-				auto temp_time = get_current_time();
+				const auto temp_time = get_current_time();
                 log_file << "{" + temp_time + "}" + "[" + "LOG_WARNING" + "]" + " >> " + text << ENDL;
                 break;
-
 			}
 
 			default:
@@ -215,9 +209,6 @@ void Logger::Print_log(std::string text)
 			std::cout << "LOG_ALL";
 			SetConsoleTextAttribute(get_console_handle(), 15);
 			std::cout << "]" << " >> " << text << ENDL;
-
-
-
 			break;
 		}
 
@@ -241,7 +232,7 @@ void Logger::Print_log(std::string text)
 			break;
 		}
 
-		case LOG_ERROR:
+		[[likely]] case LOG_ERROR:
 		{
 			std::cout << "{" << Logger::get_current_time() << "} " << "[";
 			SetConsoleTextAttribute(get_console_handle(), 12);
@@ -251,22 +242,13 @@ void Logger::Print_log(std::string text)
 			break;
 		}
 
-
 		default:
-		{
 			break;
-		}
-
-
-
+		
 
 		}
-
-
-
 
 	}
-
 
 	else if (Logger::get_log_mode() == LOG_FILE)
 {
@@ -276,7 +258,7 @@ void Logger::Print_log(std::string text)
         {
             if (log_file.is_open())
             {
-                auto temp_time = get_current_time();
+                const auto temp_time = get_current_time();
                 log_file << "{" + temp_time + "}" + "[" + "LOG_ALL" + "]" + " >> " + text << ENDL;
                 break;
             }
@@ -286,7 +268,7 @@ void Logger::Print_log(std::string text)
         {
             if (log_file.is_open())
             {
-                auto temp_time = get_current_time();
+               const  auto temp_time = get_current_time();
                 log_file << "{" + temp_time + "}" + "[" + "LOG_ERROR" + "]" + " >> " + text << ENDL;
                 break;
             }
@@ -296,7 +278,7 @@ void Logger::Print_log(std::string text)
         {
             if (log_file.is_open())
             {
-                auto temp_time = get_current_time();
+                const auto temp_time = get_current_time();
                 log_file << "{" + temp_time + "}" + "[" + "LOG_SUCCESSFUL" + "]" + " >> " + text << ENDL;
                 break;
             }
@@ -306,7 +288,7 @@ void Logger::Print_log(std::string text)
         {
             if (log_file.is_open())
             {
-                auto temp_time = get_current_time();
+                const auto temp_time = get_current_time();
                 log_file << "{" + temp_time + "}" + "[" + "LOG_WARNING" + "]" + " >> "+ text << ENDL;
                 break;
             }
@@ -321,8 +303,6 @@ void Logger::Print_log(std::string text)
 		MessageBoxA(nullptr, "Weird!", "test!", 0);
 		return;
 	}
-
-
 
 }
 
@@ -352,6 +332,3 @@ bool Logger::Create_Log_File(std::string log_file_name)
 	log_file.open(log);
 	return true;
 }
-
-
-
