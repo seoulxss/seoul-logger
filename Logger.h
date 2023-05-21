@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 #define ENDL "\n"
 
@@ -8,35 +8,25 @@
 #include <fstream>
 #include <iostream>
 
-
-
-#define COLOR_WHITE 15
-#define COLOR_RED 12
-#define COLOR_GREEN 10
-#define COLOR_YELLOW 14
-
-
-
-
-
+constexpr unsigned int COLOR_WHITE = 15;
+constexpr unsigned int COLOR_RED = 12;
+constexpr unsigned int COLOR_GREEN = 10;
+constexpr unsigned int COLOR_YELLOW = 14;
 
 
 class Logger
 {
-
-
 	//Log Level section
 public:
-	enum LOG_LEVEL
+	enum LOG_LEVEL 
 	{
 		LOG_ALL = 3,
 		LOG_WARNING = 2,
 		LOG_ERROR = 1,
 		LOG_SUCCESSFUL = 0,
-
 	};
 
-	inline LOG_LEVEL get_log_level() const;
+	[[nodiscard]] inline LOG_LEVEL get_log_level() const;
 	LOG_LEVEL set_log_level(LOG_LEVEL new_log_level);
 
 private:
@@ -60,7 +50,7 @@ public:
 		LOG_CONSOLE = 0,
 	};
 
-	inline LOG_MODE get_log_mode() const;
+	[[nodiscard]] inline LOG_MODE get_log_mode() const;
 	LOG_MODE set_log_mode(LOG_MODE new_log_mode);
 
 private:
@@ -76,8 +66,7 @@ private:
 
 
 	//Time section
-
-public:
+private:
 	std::string get_current_time();
 	std::string current_time = get_current_time();
 
@@ -91,12 +80,12 @@ public:
 	//Console section
 private:
 	HANDLE console_handle = nullptr;
-
+	bool close_console_handle() const;
 
 public:
-	HANDLE get_console_handle() const;
+	[[nodiscard]] HANDLE get_console_handle() const;
 	HANDLE set_console_handle();
-	bool close_console_handle();
+
 
 
 
@@ -106,7 +95,6 @@ public:
 
 
 	//function section
-
 public:
 
 	bool Init_Logger();
@@ -118,10 +106,13 @@ public:
 		Shutdown_Logger();
 	}
 
+	Logger(LOG_MODE wish_log_mode, LOG_LEVEL wish_log_level) : log_mode(wish_log_mode), log_level(wish_log_level)
+	{
+		Init_Logger();
+	}
 
 
-
-
+	
 
 
 
@@ -129,19 +120,19 @@ public:
 
 
 	//File section
-
-	std::string get_exe_path();
+private:
+	[[nodiscard]] std::string get_exe_path();
 	std::string get_exe_file_name();
 
-
+public:
 	bool Create_Log_File(std::string log_file_name);
-	std::ofstream get_current_file();
+	[[nodiscard]] std::ofstream get_current_file();
 
 
 
 
 private:
-	bool init_log = false;
+	inline static bool init_log = false;
 	FILE* file_p;
 	std::ofstream log_file;
 
