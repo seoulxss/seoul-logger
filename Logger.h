@@ -1,17 +1,18 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
-#define ENDL "\n"
 
 #include <filesystem>
 #include <windows.h>
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <array>
 
 constexpr unsigned int COLOR_WHITE = 15;
 constexpr unsigned int COLOR_RED = 12;
 constexpr unsigned int COLOR_GREEN = 10;
 constexpr unsigned int COLOR_YELLOW = 14;
+constexpr char ENDL[] = "\n";
 
 
 class Logger
@@ -20,14 +21,14 @@ class Logger
 public:
 	enum LOG_LEVEL 
 	{
-		LOG_ALL = 3,
+		LOG_GENERAL = 3,
 		LOG_WARNING = 2,
 		LOG_ERROR = 1,
 		LOG_SUCCESSFUL = 0,
 	};
 
 	[[nodiscard]] inline LOG_LEVEL get_log_level() const;
-	LOG_LEVEL set_log_level(LOG_LEVEL new_log_level);
+	LOG_LEVEL set_log_level(LOG_LEVEL &new_log_level);
 
 private:
 	LOG_LEVEL log_level = LOG_ERROR;
@@ -99,7 +100,9 @@ public:
 
 	bool Init_Logger();
 	bool Shutdown_Logger();
-	void Print_log(std::string text);
+
+
+	void Print_log(const std::string &text);
 
 	~Logger()
 	{
@@ -125,7 +128,7 @@ private:
 	std::string get_exe_file_name();
 
 public:
-	bool Create_Log_File(std::string log_file_name);
+	bool Create_Log_File(const std::string &log_file_name);
 	[[nodiscard]] std::ofstream get_current_file();
 
 
