@@ -5,7 +5,7 @@ inline Logger::LOG_LEVEL Logger::get_log_level() const
 	return Logger::log_level;
 }
 
-Logger::LOG_LEVEL Logger::set_log_level(LOG_LEVEL new_log_level)
+Logger::LOG_LEVEL Logger::set_log_level(LOG_LEVEL &new_log_level)
 {
 	return Logger::log_level = new_log_level;
 }
@@ -44,6 +44,7 @@ HANDLE Logger::set_console_handle()
 }
 
 //Make sure to call Create_log_file when u want to log into a file!
+//This also gehts called automatically, so no need to call it again.
 bool Logger::Init_Logger()
 {
     if (Logger::init_log == false)
@@ -60,9 +61,9 @@ bool Logger::Init_Logger()
 
         switch (Logger::get_log_level())
         {
-            case LOG_ALL:
+            case LOG_GENERAL:
             {
-                std::cout << "Initialized Logger with: LOG_ALL level" << ENDL;
+                std::cout << "Initialized Logger with: LOG_GENERAL level" << ENDL;
                 break;
             }
 
@@ -119,6 +120,7 @@ bool Logger::close_console_handle() const
 	}
 }
 
+//Make sure to call this, at the end of your program
 bool Logger::Shutdown_Logger()
 {
 	FreeConsole();
@@ -137,21 +139,22 @@ bool Logger::Shutdown_Logger()
 	return true;
 }
 
-void Logger::Print_log(std::string text)
+//Prints something in the console
+void Logger::Print_log(const std::string &text)
 {
 	if (Logger::get_log_mode() == LOG_FILE_AND_CONSOLE)
 	{
 		switch (Logger::get_log_level())
 		{
-		[[unlikely]] case LOG_ALL:
+		[[unlikely]] case LOG_GENERAL:
 			{	
 				std::cout << "{" << Logger::get_current_time() << "} " << "[";
 				SetConsoleTextAttribute(get_console_handle(), 9);
-				std::cout << "LOG_ALL";
+				std::cout << "LOG_GENERAL";
 				SetConsoleTextAttribute(get_console_handle(), COLOR_WHITE);
 				std::cout << "]" << " >> " << text << ENDL;
 				const auto temp_time = get_current_time();
-                log_file << "{" + temp_time + "}" + "[" + "LOG_ALL" + "]" + " >> " + text << ENDL;
+                log_file << "{" + temp_time + "}" + "[" + "LOG_GENERAL" + "]" + " >> " + text << ENDL;
                 break;
 			}
 
@@ -202,17 +205,17 @@ void Logger::Print_log(std::string text)
 	{
 		switch (Logger::get_log_level())
 		{
-		case LOG_ALL:
+		[[unlikely]]case LOG_GENERAL:
 		{
 			std::cout << "{" << Logger::get_current_time() << "} " << "[";
 			SetConsoleTextAttribute(get_console_handle(), 9);
-			std::cout << "LOG_ALL";
+			std::cout << "LOG_GENERAL";
 			SetConsoleTextAttribute(get_console_handle(), 15);
 			std::cout << "]" << " >> " << text << ENDL;
 			break;
 		}
 
-		case LOG_SUCCESSFUL:
+		[[likely]]case LOG_SUCCESSFUL:
 		{
 			std::cout << "{" << Logger::get_current_time() << "} " << "[";
 			SetConsoleTextAttribute(get_console_handle(), 10);
@@ -254,17 +257,17 @@ void Logger::Print_log(std::string text)
 {
     switch (get_log_level())
     {
-        case LOG_ALL:
+       [[unlikely]]case LOG_GENERAL:
         {
             if (log_file.is_open())
             {
                 const auto temp_time = get_current_time();
-                log_file << "{" + temp_time + "}" + "[" + "LOG_ALL" + "]" + " >> " + text << ENDL;
+                log_file << "{" + temp_time + "}" + "[" + "LOG_GENERAL" + "]" + " >> " + text << ENDL;
                 break;
             }
             break;
         }
-        case LOG_ERROR:
+        [[likely]]case LOG_ERROR:
         {
             if (log_file.is_open())
             {
@@ -274,7 +277,7 @@ void Logger::Print_log(std::string text)
             }
             break;
         }
-        case LOG_SUCCESSFUL:
+        [[likely]]case LOG_SUCCESSFUL:
         {
             if (log_file.is_open())
             {
@@ -321,7 +324,7 @@ std::string Logger::get_exe_file_name()
 	return std::string(buff);
 }
 
-bool Logger::Create_Log_File(std::string log_file_name)
+bool Logger::Create_Log_File(const std::string &log_file_name)
 {
 	std::string log = get_exe_path();
 	log.append(log_file_name);
