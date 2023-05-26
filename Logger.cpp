@@ -33,6 +33,17 @@ std::string Logger::get_current_time()
 	return oss.str();
 }
 
+bool Logger::set_time_use(const bool val)
+{
+	Logger::use_time = val;
+	return Logger::use_time;
+}
+
+bool Logger::get_time_use() const
+{
+	return Logger::use_time;
+}
+
 HANDLE Logger::get_console_handle() const
 {
 	return Logger::console_handle;
@@ -136,7 +147,7 @@ bool Logger::Shutdown_Logger()
 
 	file_p = nullptr;
 
-	if (get_console_handle() != NULL || get_console_handle() != INVALID_HANDLE_VALUE)
+	if (get_console_handle() != nullptr && get_console_handle() != INVALID_HANDLE_VALUE)
 		close_console_handle();
 
 	if (log_file.is_open())
@@ -153,55 +164,71 @@ void Logger::Print_log(const std::string &text)
 		switch (Logger::get_log_level())
 		{
 		[[unlikely]] case LOG_GENERAL:
-			{	
-				std::cout << "{" << Logger::get_current_time() << "} " << "[";
-				SetConsoleTextAttribute(get_console_handle(), 9);
-				std::cout << "LOG_GENERAL";
-				SetConsoleTextAttribute(get_console_handle(), COLOR_WHITE);
-				std::cout << "]" << " >> " << text << ENDL;
-				const auto temp_time = get_current_time();
-                log_file << "{" + temp_time + "}" + "[" + "LOG_GENERAL" + "]" + " >> " + text << ENDL;
-                break;
+		{
+			if (Logger::get_time_use() == true)
+			{
+				std::cout << "{" << Logger::get_current_time() << "} ";
 			}
+			std::cout << "[";
+			SetConsoleTextAttribute(get_console_handle(), 9);
+			std::cout << "LOG_GENERAL";
+			SetConsoleTextAttribute(get_console_handle(), COLOR_WHITE);
+			std::cout << "]" << " >> " << text << ENDL;
+			const auto temp_time = get_current_time();
+			log_file << "{" + temp_time + "}" + "[" + "LOG_GENERAL" + "]" + " >> " + text << ENDL;
+			break;
+		}
 
 		[[likely]] case  LOG_ERROR:
+		{
+			if (Logger::get_time_use() == true)
 			{
-				std::cout << "{" << Logger::get_current_time() << "} " << "[";
-				SetConsoleTextAttribute(get_console_handle(), COLOR_RED);
-				std::cout << "LOG_ERROR";
-				SetConsoleTextAttribute(get_console_handle(), COLOR_WHITE);
-				std::cout << "]" << " >> " << text << ENDL;
-				const auto temp_time = get_current_time();
-                log_file << "{" + temp_time + "}" + "[" + "LOG_ERROR" + "]" + " >> " + text << ENDL;
-                break;
+				std::cout << "{" << Logger::get_current_time() << "} ";
 			}
+			std::cout << "[";
+			SetConsoleTextAttribute(get_console_handle(), COLOR_RED);
+			std::cout << "LOG_ERROR";
+			SetConsoleTextAttribute(get_console_handle(), COLOR_WHITE);
+			std::cout << "]" << " >> " << text << ENDL;
+			const auto temp_time = get_current_time();
+			log_file << "{" + temp_time + "}" + "[" + "LOG_ERROR" + "]" + " >> " + text << ENDL;
+			break;
+		}
 
 		[[likely]] case LOG_SUCCESSFUL:
+		{
+			if (Logger::get_time_use() == true)
 			{
-				std::cout << "{" << Logger::get_current_time() << "} " << "[";
-				SetConsoleTextAttribute(get_console_handle(), COLOR_GREEN);
-				std::cout << "LOG_SUCCESSFUL";
-				SetConsoleTextAttribute(get_console_handle(), COLOR_WHITE);
-				std::cout << "]" << " >> " << text << ENDL;
-				const auto temp_time = get_current_time();
-                log_file << "{" + temp_time + "}" + "[" + "LOG_SUCCESSFUL" + "]" + " >> " + text << ENDL;
-                break;
+				std::cout << "{" << Logger::get_current_time() << "} ";
 			}
+			std::cout << "[";
+			SetConsoleTextAttribute(get_console_handle(), COLOR_GREEN);
+			std::cout << "LOG_SUCCESSFUL";
+			SetConsoleTextAttribute(get_console_handle(), COLOR_WHITE);
+			std::cout << "]" << " >> " << text << ENDL;
+			const auto temp_time = get_current_time();
+			log_file << "{" + temp_time + "}" + "[" + "LOG_SUCCESSFUL" + "]" + " >> " + text << ENDL;
+			break;
+		}
 
 		case LOG_WARNING:
+		{
+			if (Logger::get_time_use() == true)
 			{
-				std::cout << "{" << Logger::get_current_time() << "} " << "[";
-				SetConsoleTextAttribute(get_console_handle(), COLOR_YELLOW);
-				std::cout << "LOG_WARNING";
-				SetConsoleTextAttribute(get_console_handle(), COLOR_WHITE);
-				std::cout << "]" << " >> " << text << ENDL;
-				const auto temp_time = get_current_time();
-                log_file << "{" + temp_time + "}" + "[" + "LOG_WARNING" + "]" + " >> " + text << ENDL;
-                break;
+				std::cout << "{" << Logger::get_current_time() << "} ";
 			}
+			std::cout << "[";
+			SetConsoleTextAttribute(get_console_handle(), COLOR_YELLOW);
+			std::cout << "LOG_WARNING";
+			SetConsoleTextAttribute(get_console_handle(), COLOR_WHITE);
+			std::cout << "]" << " >> " << text << ENDL;
+			const auto temp_time = get_current_time();
+			log_file << "{" + temp_time + "}" + "[" + "LOG_WARNING" + "]" + " >> " + text << ENDL;
+			break;
+		}
 
-			default:
-				break;
+		default:
+			break;
 
 		}
 
@@ -209,11 +236,16 @@ void Logger::Print_log(const std::string &text)
 
 	else if (Logger::get_log_mode() == LOG_CONSOLE)
 	{
+		[[likely]]
 		switch (Logger::get_log_level())
 		{
-		[[unlikely]]case LOG_GENERAL:
+		[[unlikely]] case LOG_GENERAL:
 		{
-			std::cout << "{" << Logger::get_current_time() << "} " << "[";
+			if (Logger::get_time_use() == true)
+			{
+				std::cout << "{" << Logger::get_current_time() << "} ";
+			}
+			std::cout << "[";
 			SetConsoleTextAttribute(get_console_handle(), 9);
 			std::cout << "LOG_GENERAL";
 			SetConsoleTextAttribute(get_console_handle(), 15);
@@ -221,9 +253,13 @@ void Logger::Print_log(const std::string &text)
 			break;
 		}
 
-		[[likely]]case LOG_SUCCESSFUL:
+		[[likely]] case LOG_SUCCESSFUL:
 		{
-			std::cout << "{" << Logger::get_current_time() << "} " << "[";
+			if (Logger::get_time_use() == true)
+			{
+				std::cout << "{" << Logger::get_current_time() << "} ";
+			}
+			std::cout << "[";
 			SetConsoleTextAttribute(get_console_handle(), 10);
 			std::cout << "LOG_SUCCESSFUL";
 			SetConsoleTextAttribute(get_console_handle(), 15);
@@ -233,7 +269,12 @@ void Logger::Print_log(const std::string &text)
 
 		case LOG_WARNING:
 		{
-			std::cout << "{" << Logger::get_current_time() << "} " << "[";
+			if (Logger::get_time_use() == true)
+			{
+				std::cout << "{" << Logger::get_current_time() << "} ";
+			}
+
+			std::cout << "[";
 			SetConsoleTextAttribute(get_console_handle(), 14);
 			std::cout << "LOG_WARNING";
 			SetConsoleTextAttribute(get_console_handle(), 15);
@@ -243,7 +284,12 @@ void Logger::Print_log(const std::string &text)
 
 		[[likely]] case LOG_ERROR:
 		{
-			std::cout << "{" << Logger::get_current_time() << "} " << "[";
+			if (Logger::get_time_use() == true)
+			{
+				std::cout << "{" << Logger::get_current_time() << "} ";
+			}
+
+			std::cout << "[";
 			SetConsoleTextAttribute(get_console_handle(), 12);
 			std::cout << "LOG_ERROR";
 			SetConsoleTextAttribute(get_console_handle(), 15);
