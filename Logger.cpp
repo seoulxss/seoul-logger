@@ -52,8 +52,10 @@ bool Logger::Init_Logger()
 
     if (Logger::get_log_mode() == LOG_CONSOLE || Logger::get_log_mode() == LOG_FILE_AND_CONSOLE)
     {
-        AllocConsole();
-        freopen_s(&file_p, "CONOUT$", "w", stdout);
+
+		if (Logger::get_console_handle() == nullptr)
+			AllocConsole();
+			freopen_s(&file_p, "CONOUT$", "w", stdout);
 
     	if (Logger::get_console_handle() == NULL)
 			Logger::set_console_handle();
