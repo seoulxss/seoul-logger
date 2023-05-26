@@ -64,9 +64,12 @@ bool Logger::Init_Logger()
     if (Logger::get_log_mode() == LOG_CONSOLE || Logger::get_log_mode() == LOG_FILE_AND_CONSOLE)
     {
 
+		if (Logger::get_console_handle() != nullptr)
+			Console_already_There = true;
+
 		if (Logger::get_console_handle() == nullptr)
 		{
-						AllocConsole();
+			AllocConsole();
 			freopen_s(&file_p, "CONOUT$", "w", stdout);
 
 		}
@@ -127,14 +130,16 @@ bool Logger::Init_Logger()
 
 bool Logger::close_console_handle() const
 {
-	if (get_console_handle() == nullptr)
+	if (get_console_handle() == NULL || get_console_handle() == INVALID_HANDLE_VALUE)
 		return false;
 
-	else
+	else if (get_console_handle() != NULL && Console_already_There == true)
 	{
 		 CloseHandle(get_console_handle());
 		 return true;
 	}
+
+	return false;
 }
 
 //Make sure to call this, at the end of your program
