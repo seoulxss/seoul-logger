@@ -5,7 +5,7 @@ inline Logger::LOG_LEVEL Logger::get_log_level() const
 	return Logger::log_level;
 }
 
-Logger::LOG_LEVEL Logger::set_log_level(LOG_LEVEL &new_log_level)
+Logger::LOG_LEVEL Logger::set_log_level(LOG_LEVEL new_log_level)
 {
 	return Logger::log_level = new_log_level;
 }
@@ -54,8 +54,12 @@ bool Logger::Init_Logger()
     {
 
 		if (Logger::get_console_handle() == nullptr)
-			AllocConsole();
+		{
+						AllocConsole();
 			freopen_s(&file_p, "CONOUT$", "w", stdout);
+
+		}
+
 
     	if (Logger::get_console_handle() == NULL)
 			Logger::set_console_handle();
@@ -112,8 +116,8 @@ bool Logger::Init_Logger()
 
 bool Logger::close_console_handle() const
 {
-	if (get_console_handle() == INVALID_HANDLE_VALUE || get_console_handle() == NULL)
-		return true;
+	if (get_console_handle() == nullptr)
+		return false;
 
 	else
 	{
