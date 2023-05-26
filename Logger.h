@@ -6,7 +6,6 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <array>
 
 constexpr unsigned int COLOR_WHITE = 15;
 constexpr unsigned int COLOR_RED = 12;
@@ -28,7 +27,7 @@ public:
 	};
 
 	[[nodiscard]] inline LOG_LEVEL get_log_level() const;
-	LOG_LEVEL set_log_level(LOG_LEVEL &new_log_level);
+	LOG_LEVEL set_log_level(LOG_LEVEL new_log_level);
 
 private:
 	LOG_LEVEL log_level = LOG_ERROR;
@@ -70,7 +69,11 @@ private:
 private:
 	std::string get_current_time();
 	std::string current_time = get_current_time();
+	bool use_time = true;
 
+public:
+	bool set_time_use(const bool val);
+	bool get_time_use() const;
 
 
 
