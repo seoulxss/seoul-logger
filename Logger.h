@@ -16,6 +16,7 @@ constexpr char ENDL[] = "\n";
 
 class Logger
 {
+
 	//Log Level section
 public:
 	enum LOG_LEVEL 
@@ -85,6 +86,7 @@ public:
 private:
 	HANDLE console_handle = nullptr;
 	bool close_console_handle() const;
+	bool Console_already_There = false;
 
 public:
 	[[nodiscard]] HANDLE get_console_handle() const;
