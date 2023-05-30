@@ -28,7 +28,29 @@ namespace Logger
 
 	}
 
+	namespace helper
+	{
+		bool ShowMessageBox(const char* Text, const char* Title, bool beep);
 
+		template<typename Type>
+		std::string value_to_string_hex(Type value)
+		{
+			std::stringstream hex_val_ss;
+			hex_val_ss << "0x" << std::hex << value;
+			std::string HexVal = hex_val_ss.str();
+			return HexVal;
+		}
+
+		template<typename Type>
+		std::string value_to_string_dec(Type value)
+		{
+			std::stringstream val_ss;
+			val_ss << std::dec << value;
+			std::string Val = val_ss.str();
+			return Val;
+		}
+
+	}
 
 
 
