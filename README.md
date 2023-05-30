@@ -18,7 +18,7 @@ Currently the Logger can do these things:
  <li> Logging in a file with the location of the target exe (if u have a DLL to inject somewhere)  </li> 
  <li> Logging in a file where you can give the path  </li> 
  <li> Multiple log level with color support </li> 
- <li> Some helper functions to print hex and dec values (obv) </li> 
+ <li> Some helper functions to print hex and dec values  </li> 
 </ol>
 
 
