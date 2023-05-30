@@ -2,7 +2,7 @@
 
 <p> A very small c++ logging class which can be used in a DLL application and a console only app aswell</p>
 Here's how it looks like:
-<br> </br>
+<br><img src="https://github.com/seoulxss/seoul-logger/assets/91141907/e265b53c-1f29-416c-9142-7c8c94c25662"></br>
 <img src="https://github.com/seoulxss/seoul-logger/assets/91141907/e265b53c-1f29-416c-9142-7c8c94c25662">
 
 <h2> Warning! </h2>
