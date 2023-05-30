@@ -7,14 +7,37 @@
 #include <fstream>
 #include <iostream>
 
-constexpr unsigned int COLOR_WHITE = 15;
-constexpr unsigned int COLOR_RED = 12;
-constexpr unsigned int COLOR_GREEN = 10;
-constexpr unsigned int COLOR_YELLOW = 14;
-constexpr char ENDL[] = "\n";
+
+namespace Logger
+{
+
+	namespace LOG_COLOR
+	{
+		constexpr unsigned int COLOR_WHITE = 15;
+		constexpr unsigned int COLOR_RED = 12;
+		constexpr unsigned int COLOR_GREEN = 10;
+		constexpr unsigned int COLOR_YELLOW = 14;
 
 
-class Logger
+	}
+
+	namespace LOG_MACRO
+	{
+		constexpr char ENDL[] = "\n";
+
+
+	}
+
+
+
+
+
+
+
+}
+
+
+class seoul_logger
 {
 
 	//Log Level section
@@ -88,7 +111,7 @@ private:
 	bool close_console_handle() const;
 	bool Console_already_There = false;
 
-public:
+private:
 	[[nodiscard]] HANDLE get_console_handle() const;
 	HANDLE set_console_handle();
 
@@ -107,14 +130,21 @@ public:
 	bool Shutdown_Logger();
 
 
-	void Print_log(const std::string &text);
+	void Print(const std::string &text);
 
-	~Logger()
+
+	bool already_down = false;
+
+	~seoul_logger()
 	{
-		Shutdown_Logger();
+		if (already_down == false)
+			Shutdown_Logger();
+
+		else
+			return;
 	}
 
-	Logger(LOG_MODE wish_log_mode, LOG_LEVEL wish_log_level) : log_mode(wish_log_mode), log_level(wish_log_level)
+	seoul_logger(LOG_MODE wish_log_mode, LOG_LEVEL wish_log_level) : log_mode(wish_log_mode), log_level(wish_log_level)
 	{
 		Init_Logger();
 	}
@@ -129,11 +159,10 @@ public:
 
 	//File section
 private:
-	[[nodiscard]] std::string get_exe_path();
 	std::string get_exe_file_name();
 
 public:
-	bool Create_Log_File(const std::string &log_file_name);
+	bool Create_Log_File(const std::string log_file_name, bool in_directory, std::string Location, std::string name_of_application);
 	[[nodiscard]] std::ofstream get_current_file();
 
 
@@ -143,6 +172,11 @@ private:
 	inline static bool init_log = false;
 	FILE* file_p;
 	std::ofstream log_file;
+
+
+
+
+
 
 
 
