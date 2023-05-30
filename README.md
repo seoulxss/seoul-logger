@@ -4,5 +4,5 @@
 
 
 <h2> Warning! </h2>
-<p> This Logger is very new and I'm not that insane good at c++. So keep in mind, that it isn't the best code.</p>
-<p> There are also a few bugs I think, I'm looking forward to fix everything and add some more features!</p>
+ This Logger is very new and I'm not that insane good at c++. So keep in mind, that it isn't the best code.
+ There are also a few bugs I think, I'm looking forward to fix everything and add some more features!
