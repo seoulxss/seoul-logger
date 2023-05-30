@@ -1,5 +1,21 @@
 #include "Logger.h"
 
+bool Logger::helper::ShowMessageBox(const char* Text, const char* Title, bool beep)
+{
+	if (beep == true)
+	{
+		MessageBeep(MB_ICONERROR);
+		MessageBoxA(nullptr, Text, Title, MB_ICONERROR);
+		return true;
+	}
+
+	else
+	{
+		MessageBoxA(nullptr, Text, Title, MB_ICONERROR);
+		return true;
+	}
+}
+
 inline seoul_logger::LOG_LEVEL seoul_logger::get_log_level() const
 {
 	return seoul_logger::log_level;
@@ -381,7 +397,7 @@ std::string seoul_logger::get_exe_file_name()
 bool seoul_logger::Create_Log_File(const std::string log_file_name, bool in_directory, std::string Location, std::string name_of_application)
 {
 
-	if (in_directory == true)
+	if (in_directory == true && log_file_name.empty() != true)
 	{
 		std::string log = get_exe_file_name();
 
@@ -404,7 +420,7 @@ bool seoul_logger::Create_Log_File(const std::string log_file_name, bool in_dire
 	}
 
 
-	else if (in_directory == false)
+	else if (in_directory == false && Location.empty() != true)
 	{
 
 		if (std::filesystem::exists(Location))
@@ -427,6 +443,11 @@ bool seoul_logger::Create_Log_File(const std::string log_file_name, bool in_dire
 
 	}
 
+	else
+	{
+		Logger::helper::ShowMessageBox("Something went wrong", "Error Create_log_file!", true);
+		return false;
+	}
 
 	return false;
 }
