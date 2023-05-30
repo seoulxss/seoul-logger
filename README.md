@@ -6,3 +6,6 @@
 <h2> Warning! </h2>
  This Logger is very new and I'm not that insane good at c++. So keep in mind, that it isn't the best code.
  There are also a few bugs I think, I'm looking forward to fix everything and add some more features!
+
+<h2> How do I use this? </h2>
+There is a Example.cpp which contains everything you need to know. If u still have some more questions, feel free to ask! :)
