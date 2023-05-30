@@ -13,6 +13,14 @@ There is a Example.cpp which contains everything you need to know. If u still ha
 
 <h2> Features? </h2>
 Currently the Logger can do these things:
+<ol>
+ <li> 1. Logging in a console (obv) </li> 
+ 
+ 
+ 
+
+</ol>
+
 <br>1. Logging in a console (obv) </br>
 <br>2. Logging in a file with the location of the target exe (if u have a DLL to inject somewhere) </br>
 <br>3. Logging in a file where you can give the path </br>
