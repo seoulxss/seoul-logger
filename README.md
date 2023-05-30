@@ -14,15 +14,11 @@ There is a Example.cpp which contains everything you need to know. If u still ha
 <h2> Features? </h2>
 Currently the Logger can do these things:
 <ol>
- <li> 1. Logging in a console (obv) </li> 
- 
- 
- 
-
+ <li> Logging in a console (obv) </li> 
+ <li> Logging in a file with the location of the target exe (if u have a DLL to inject somewhere)  </li> 
+ <li> Logging in a file where you can give the path  </li> 
+ <li> Multiple log level with color support </li> 
+ <li> Some helper functions to print hex and dec values (obv) </li> 
 </ol>
 
-<br>1. Logging in a console (obv) </br>
-<br>2. Logging in a file with the location of the target exe (if u have a DLL to inject somewhere) </br>
-<br>3. Logging in a file where you can give the path </br>
-<br>4. Multiple log level with color support</br>
-<br>5. Some helper functions to print hex and dec values </br>
+
