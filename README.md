@@ -19,6 +19,7 @@ Currently the Logger can do these things:
  <li> Logging in a file where you can give the path  </li> 
  <li> Multiple log level with color support </li> 
  <li> Some helper functions to print hex and dec values  </li> 
+ <li> Multiple logger objects </li>
 </ol>
 
 
