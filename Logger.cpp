@@ -16,27 +16,27 @@ bool Logger::helper::ShowMessageBox(const char* Text, const char* Title, bool be
 	}
 }
 
-inline seoul_logger::LOG_LEVEL seoul_logger::get_log_level() const
+inline Cseoul_logger::LOG_LEVEL Cseoul_logger::get_log_level() const
 {
-	return seoul_logger::log_level;
+	return Cseoul_logger::log_level;
 }
 
-seoul_logger::LOG_LEVEL seoul_logger::set_log_level(LOG_LEVEL new_log_level)
+Cseoul_logger::LOG_LEVEL Cseoul_logger::set_log_level(LOG_LEVEL new_log_level)
 {
-	return seoul_logger::log_level = new_log_level;
+	return Cseoul_logger::log_level = new_log_level;
 }
 
-inline seoul_logger::LOG_MODE seoul_logger::get_log_mode() const
+inline Cseoul_logger::LOG_MODE Cseoul_logger::get_log_mode() const
 {
-	return seoul_logger::log_mode;
+	return Cseoul_logger::log_mode;
 }
 
-seoul_logger::LOG_MODE seoul_logger::set_log_mode(LOG_MODE new_log_mode)
+Cseoul_logger::LOG_MODE Cseoul_logger::set_log_mode(LOG_MODE new_log_mode)
 {
-	return seoul_logger::log_mode = new_log_mode;
+	return Cseoul_logger::log_mode = new_log_mode;
 }
 
-std::string seoul_logger::get_current_time()
+std::string Cseoul_logger::get_current_time()
 {
 	std::chrono::time_point<std::chrono::system_clock> t = std::chrono::system_clock::now();
     time_t t_time_t = std::chrono::system_clock::to_time_t(t);
@@ -49,41 +49,41 @@ std::string seoul_logger::get_current_time()
 	return oss.str();
 }
 
-bool seoul_logger::set_time_use(const bool val)
+bool Cseoul_logger::set_time_use(const bool val)
 {
-	seoul_logger::use_time = val;
-	return seoul_logger::use_time;
+	Cseoul_logger::use_time = val;
+	return Cseoul_logger::use_time;
 }
 
-bool seoul_logger::get_time_use() const
+bool Cseoul_logger::get_time_use() const
 {
-	return seoul_logger::use_time;
+	return Cseoul_logger::use_time;
 }
 
-HANDLE seoul_logger::get_console_handle() const
+HANDLE Cseoul_logger::get_console_handle() const
 {
-	return seoul_logger::console_handle;
+	return Cseoul_logger::console_handle;
 }
 
-HANDLE seoul_logger::set_console_handle()
+HANDLE Cseoul_logger::set_console_handle()
 {
-	return seoul_logger::console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	return Cseoul_logger::console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
 //Make sure to call Create_log_file when u want to log into a file!
 //This also gehts called automatically, so no need to call it again.
-bool seoul_logger::Init_Logger()
+bool Cseoul_logger::Init_Logger()
 {
-    if (seoul_logger::init_log == false)
-        seoul_logger::init_log = true;
+    if (Cseoul_logger::init_log == false)
+        Cseoul_logger::init_log = true;
 
-    if (seoul_logger::get_log_mode() == LOG_CONSOLE || seoul_logger::get_log_mode() == LOG_FILE_AND_CONSOLE)
+    if (Cseoul_logger::get_log_mode() == LOG_CONSOLE || Cseoul_logger::get_log_mode() == LOG_FILE_AND_CONSOLE)
     {
 
-		if (seoul_logger::get_console_handle() != nullptr)
+		if (Cseoul_logger::get_console_handle() != nullptr)
 			Console_already_There = true;
 
-		if (seoul_logger::get_console_handle() == nullptr)
+		if (Cseoul_logger::get_console_handle() == nullptr)
 		{
 			AllocConsole();
 			freopen_s(&file_p, "CONOUT$", "w", stdout);
@@ -91,11 +91,11 @@ bool seoul_logger::Init_Logger()
 		}
 
 
-    	if (seoul_logger::get_console_handle() == NULL)
-			seoul_logger::set_console_handle();
+    	if (Cseoul_logger::get_console_handle() == NULL)
+			Cseoul_logger::set_console_handle();
 
 
-        switch (seoul_logger::get_log_level())
+        switch (Cseoul_logger::get_log_level())
         {
             case LOG_GENERAL:
             {
@@ -144,7 +144,7 @@ bool seoul_logger::Init_Logger()
     return true;
 }
 
-bool seoul_logger::close_console_handle() const
+bool Cseoul_logger::close_console_handle() const
 {
 	if (get_console_handle() == NULL || get_console_handle() == INVALID_HANDLE_VALUE)
 		return false;
@@ -159,16 +159,17 @@ bool seoul_logger::close_console_handle() const
 }
 
 //Make sure to call this, at the end of your program
-bool seoul_logger::Shutdown_Logger()
+bool Cseoul_logger::Shutdown_Logger()
 {
-	FreeConsole();
+	if (CCounter::Oustanding_Objects() == 1)
+		FreeConsole();
 
 	if (file_p)
 		fclose(file_p);
 
 	file_p = nullptr;
 
-	if (get_console_handle() != nullptr && get_console_handle() != INVALID_HANDLE_VALUE)
+	if (get_console_handle() != nullptr && get_console_handle() != INVALID_HANDLE_VALUE && CCounter::Oustanding_Objects() == 1)
 		close_console_handle();
 
 	if (log_file.is_open())
@@ -181,17 +182,17 @@ bool seoul_logger::Shutdown_Logger()
 }
 
 //Prints something in the console
-void seoul_logger::Print(const std::string &text)
+void Cseoul_logger::Print(const std::string &text)
 {
-	if (seoul_logger::get_log_mode() == seoul_logger::LOG_FILE_AND_CONSOLE)
+	if (Cseoul_logger::get_log_mode() == Cseoul_logger::LOG_FILE_AND_CONSOLE)
 	{
-		switch (seoul_logger::get_log_level())
+		switch (Cseoul_logger::get_log_level())
 		{
-		[[unlikely]] case seoul_logger::LOG_GENERAL:
+		[[unlikely]] case Cseoul_logger::LOG_GENERAL:
 		{
-			if (seoul_logger::get_time_use() == true)
+			if (Cseoul_logger::get_time_use() == true)
 			{
-				std::cout << "{" << seoul_logger::get_current_time() << "} ";
+				std::cout << "{" << Cseoul_logger::get_current_time() << "} ";
 			}
 			std::cout << "[";
 			SetConsoleTextAttribute(get_console_handle(), 9);
@@ -203,11 +204,11 @@ void seoul_logger::Print(const std::string &text)
 			break;
 		}
 
-		[[likely]] case seoul_logger::LOG_ERROR:
+		[[likely]] case Cseoul_logger::LOG_ERROR:
 		{
-			if (seoul_logger::get_time_use() == true)
+			if (Cseoul_logger::get_time_use() == true)
 			{
-				std::cout << "{" << seoul_logger::get_current_time() << "} ";
+				std::cout << "{" << Cseoul_logger::get_current_time() << "} ";
 			}
 			std::cout << "[";
 			SetConsoleTextAttribute(get_console_handle(), Logger::LOG_COLOR::COLOR_RED);
@@ -221,9 +222,9 @@ void seoul_logger::Print(const std::string &text)
 
 		[[likely]] case LOG_SUCCESSFUL:
 		{
-			if (seoul_logger::get_time_use() == true)
+			if (Cseoul_logger::get_time_use() == true)
 			{
-				std::cout << "{" << seoul_logger::get_current_time() << "} ";
+				std::cout << "{" << Cseoul_logger::get_current_time() << "} ";
 			}
 			std::cout << "[";
 			SetConsoleTextAttribute(get_console_handle(), Logger::LOG_COLOR::COLOR_GREEN);
@@ -237,9 +238,9 @@ void seoul_logger::Print(const std::string &text)
 
 		case LOG_WARNING:
 		{
-			if (seoul_logger::get_time_use() == true)
+			if (Cseoul_logger::get_time_use() == true)
 			{
-				std::cout << "{" << seoul_logger::get_current_time() << "} ";
+				std::cout << "{" << Cseoul_logger::get_current_time() << "} ";
 			}
 			std::cout << "[";
 			SetConsoleTextAttribute(get_console_handle(), Logger::LOG_COLOR::COLOR_YELLOW);
@@ -258,16 +259,16 @@ void seoul_logger::Print(const std::string &text)
 
 	}
 
-	else if (seoul_logger::get_log_mode() == LOG_CONSOLE)
+	else if (Cseoul_logger::get_log_mode() == LOG_CONSOLE)
 	{
 		[[likely]]
-		switch (seoul_logger::get_log_level())
+		switch (Cseoul_logger::get_log_level())
 		{
 		[[unlikely]] case LOG_GENERAL:
 		{
-			if (seoul_logger::get_time_use() == true)
+			if (Cseoul_logger::get_time_use() == true)
 			{
-				std::cout << "{" << seoul_logger::get_current_time() << "} ";
+				std::cout << "{" << Cseoul_logger::get_current_time() << "} ";
 			}
 			std::cout << "[";
 			SetConsoleTextAttribute(get_console_handle(), 9);
@@ -279,9 +280,9 @@ void seoul_logger::Print(const std::string &text)
 
 		[[likely]] case LOG_SUCCESSFUL:
 		{
-			if (seoul_logger::get_time_use() == true)
+			if (Cseoul_logger::get_time_use() == true)
 			{
-				std::cout << "{" << seoul_logger::get_current_time() << "} ";
+				std::cout << "{" << Cseoul_logger::get_current_time() << "} ";
 			}
 			std::cout << "[";
 			SetConsoleTextAttribute(get_console_handle(), 10);
@@ -293,9 +294,9 @@ void seoul_logger::Print(const std::string &text)
 
 		case LOG_WARNING:
 		{
-			if (seoul_logger::get_time_use() == true)
+			if (Cseoul_logger::get_time_use() == true)
 			{
-				std::cout << "{" << seoul_logger::get_current_time() << "} ";
+				std::cout << "{" << Cseoul_logger::get_current_time() << "} ";
 			}
 
 			std::cout << "[";
@@ -308,9 +309,9 @@ void seoul_logger::Print(const std::string &text)
 
 		[[likely]] case LOG_ERROR:
 		{
-			if (seoul_logger::get_time_use() == true)
+			if (Cseoul_logger::get_time_use() == true)
 			{
-				std::cout << "{" << seoul_logger::get_current_time() << "} ";
+				std::cout << "{" << Cseoul_logger::get_current_time() << "} ";
 			}
 
 			std::cout << "[";
@@ -329,7 +330,7 @@ void seoul_logger::Print(const std::string &text)
 
 	}
 
-	else if (seoul_logger::get_log_mode() == LOG_FILE)
+	else if (Cseoul_logger::get_log_mode() == LOG_FILE)
 {
     switch (get_log_level())
     {
@@ -385,7 +386,7 @@ void seoul_logger::Print(const std::string &text)
 
 }
 
-std::string seoul_logger::get_exe_file_name()
+std::string Cseoul_logger::get_exe_file_name()
 {
 	char buff[MAX_PATH];
 	GetModuleFileNameA(NULL, buff, MAX_PATH);
@@ -394,7 +395,7 @@ std::string seoul_logger::get_exe_file_name()
 
 
 
-bool seoul_logger::Create_Log_File(const std::string log_file_name, bool in_directory, std::string Location, std::string name_of_application)
+bool Cseoul_logger::Create_Log_File(const std::string log_file_name, bool in_directory, std::string Location, std::string name_of_application)
 {
 
 	if (in_directory == true && log_file_name.empty() != true)
