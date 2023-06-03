@@ -8,9 +8,9 @@
 #include <iostream>
 
 
+
 namespace Logger
 {
-
 	namespace LOG_COLOR
 	{
 		constexpr unsigned int COLOR_WHITE = 15;
@@ -33,7 +33,7 @@ namespace Logger
 		bool ShowMessageBox(const char* Text, const char* Title, bool beep);
 
 		template<typename Type>
-		std::string value_to_string_hex(Type value)
+		constexpr std::string value_to_string_hex(Type value)
 		{
 			std::stringstream hex_val_ss;
 			hex_val_ss << "0x" << std::hex << value;
@@ -42,7 +42,7 @@ namespace Logger
 		}
 
 		template<typename Type>
-		std::string value_to_string_dec(Type value)
+		constexpr std::string value_to_string_dec(Type value)
 		{
 			std::stringstream val_ss;
 			val_ss << std::dec << value;
@@ -54,12 +54,45 @@ namespace Logger
 
 
 
-
-
 }
 
+template<class Type>
+class CCounter
+{
+public:
+	CCounter()
+	{
+		++total;
+	}
 
-class seoul_logger
+	//CCounter(const CCounter& Type);
+
+	~CCounter()
+	{
+		--total;
+	}
+
+	static size_t Oustanding_Objects();
+
+
+
+
+private:
+	static size_t total;
+
+
+};
+
+template <class Type>
+size_t CCounter<Type>::Oustanding_Objects()
+{
+	return total;
+}
+
+template<class Type>
+size_t CCounter<Type>::total = 0;
+
+class Cseoul_logger : private CCounter<Cseoul_logger>
 {
 
 	//Log Level section
@@ -157,7 +190,7 @@ public:
 
 	bool already_down = false;
 
-	~seoul_logger()
+	~Cseoul_logger()
 	{
 		if (already_down == false)
 			Shutdown_Logger();
@@ -166,7 +199,7 @@ public:
 			return;
 	}
 
-	seoul_logger(LOG_MODE wish_log_mode, LOG_LEVEL wish_log_level) : log_mode(wish_log_mode), log_level(wish_log_level)
+	Cseoul_logger(LOG_MODE wish_log_mode, LOG_LEVEL wish_log_level) : log_mode(wish_log_mode), log_level(wish_log_level)
 	{
 		Init_Logger();
 	}
@@ -204,3 +237,4 @@ private:
 
 
 };
+
