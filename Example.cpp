@@ -1,5 +1,5 @@
 #include "Logger.h"
-
+#include <array>
 
 int main()
 {
@@ -62,11 +62,9 @@ int main()
 	//														//
 	//														//
 
-
-
-
 	//Creating new logger
 	Cseoul_logger L2(Cseoul_logger::LOG_CONSOLE, Cseoul_logger::LOG_SUCCESSFUL);
+
 
 	//Sometimes you need to print values that arent strings, you can do that so:
 	L2.Print("Example int: " + std::to_string(2));
@@ -92,7 +90,7 @@ int main()
 	//you can do that also with dec numbers:
 	L2.Print("Addr-dec: " + Logger::helper::value_to_string_dec(0x5555));
 
-	std::cout << CCounter<Cseoul_logger>::Oustanding_Objects() << "STF" << Logger::LOG_MACRO::ENDL;
+	std::cout << CCounter<Cseoul_logger>::Oustanding_Objects() << "STF" << Logger::LOG_MACRO__::ENDL;
 
 
 	//														//
@@ -126,6 +124,53 @@ int main()
 	//Everything that gets printed here will be ignored (Even crash)
 	//For example:
 	//std::cout << "This will not be printed! AND Maybe even crash!" << "\n";
+
+
+
+	//														//
+	//														//
+	//					Arrays, vectors...					//
+	//														//
+	//														//
+
+
+	//Creating a new logger and a array
+	Cseoul_logger array_logger(Cseoul_logger::LOG_CONSOLE, Cseoul_logger::LOG_SUCCESSFUL);
+	auto array1 = std::array<int, 10> {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+	//Printing the array at pos 0
+	array_logger.Print("array1: " + std::to_string(array1.at(0)));
+	array_logger.Print("array1: " + std::to_string(array1[0]));
+
+	//Iterating over a array
+	//Suprise! There is no way to do that
+	//You can do that, if you iterate over it and save it into a string but u can do that yourself im pretty sure!
+	array_logger.Print("Array1:  +  Array-String!");
+
+	//Here is how...
+	std::string array_list;
+	for (int i = 0; i < array1.size(); i++)
+	{
+		auto buf = std::to_string(array1.at(i));
+		array_list.append(buf + ", ");
+		buf.clear();
+	}
+	array_logger.Print(array_list);
+
+	//Creating a new logger and vector
+	Cseoul_logger vector_logger(Cseoul_logger::LOG_CONSOLE, Cseoul_logger::LOG_SUCCESSFUL);
+	auto vector1 = std::vector<int> {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+	//Printing the vector at 0
+	vector_logger.Print(std::to_string(vector1.at(0)));
+
+
+	//Iteratung over a array:
+	//See Line 151, it's the same!
+
+
+
+
 
 
 	return 0;
