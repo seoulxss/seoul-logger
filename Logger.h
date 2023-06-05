@@ -7,30 +7,20 @@
 #include <fstream>
 #include <iostream>
 
+	//														//
+	//														//
+	//						Seoul logger V2					//
+	//														//
+	//														//
+
 
 
 namespace Logger
 {
-	namespace LOG_COLOR
-	{
-		constexpr unsigned int COLOR_WHITE = 15;
-		constexpr unsigned int COLOR_RED = 12;
-		constexpr unsigned int COLOR_GREEN = 10;
-		constexpr unsigned int COLOR_YELLOW = 14;
 
-
-	}
-
-	namespace LOG_MACRO
-	{
-		constexpr char ENDL[] = "\n";
-
-
-	}
-
+	//You can use this
 	namespace helper
 	{
-		bool ShowMessageBox(const char* Text, const char* Title, bool beep);
 
 		template<typename Type>
 		constexpr std::string value_to_string_hex(Type value)
@@ -52,6 +42,35 @@ namespace Logger
 
 	}
 
+
+
+}
+
+namespace priv_logger
+{
+
+		//You should never use this
+	namespace LOG_COLOR__
+	{
+		constexpr unsigned short int COLOR_WHITE = 15;
+		constexpr unsigned short int COLOR_RED = 12;
+		constexpr unsigned short int COLOR_GREEN = 10;
+		constexpr unsigned short int COLOR_YELLOW = 14;
+	}
+
+	//You should never use this
+	namespace LOG_MACRO__
+	{
+		constexpr char ENDL[] = "\n";
+
+	}
+
+	namespace helper
+	{
+		bool ShowMessageBox(const char* Text, const char* Title, bool beep);
+
+
+	}
 
 
 }
@@ -146,11 +165,13 @@ private:
 
 	//Time section
 private:
-	std::string get_current_time();
+	static std::string get_current_time();
 	std::string current_time = get_current_time();
 	bool use_time = true;
 
 public:
+	//set to true, to show the current time before the message
+	//set to false to hide it
 	bool set_time_use(const bool val);
 	bool get_time_use() const;
 
@@ -184,7 +205,8 @@ public:
 	bool Init_Logger();
 	bool Shutdown_Logger();
 
-
+	//This will print the string in the Console or file or both!
+	//If u want to print other things, see the Example.cpp
 	void Print(const std::string &text);
 
 
@@ -216,7 +238,13 @@ public:
 private:
 	std::string get_exe_file_name();
 
+
 public:
+	//This will create a .txt with a specific name
+	//log_file_name = this will be the name of the .txt
+	//in_directory = should it be in the exe's path? true / false
+	//Location = Put here the location if in_directory is FALSE if its true, leave it with ""
+	//name_of_application = Put the exe process name here with the ".exe"
 	bool Create_Log_File(const std::string log_file_name, bool in_directory, std::string Location, std::string name_of_application);
 	[[nodiscard]] std::ofstream get_current_file();
 
@@ -227,6 +255,7 @@ private:
 	inline static bool init_log = false;
 	FILE* file_p;
 	std::ofstream log_file;
+	std::string log_file_location;
 
 
 
