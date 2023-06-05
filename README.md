@@ -22,4 +22,10 @@ Currently the Logger can do these things:
  <li> Multiple logger objects </li>
 </ol>
 
+<h2> What features are planned? </h2>
+////
 
+
+
+<h2> Why did you do this? </h2>
+/////
