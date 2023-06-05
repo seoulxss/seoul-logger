@@ -92,7 +92,6 @@ int main()
 	//you can do that also with dec numbers:
 	L2.Print("Addr-dec: " + Logger::helper::value_to_string_dec(0x5555));
 
-	std::cout << CCounter<Cseoul_logger>::Oustanding_Objects() << "STF" << priv_logger::LOG_MACRO__::ENDL;
 
 
 	//														//
