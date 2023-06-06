@@ -28,4 +28,8 @@ Currently the Logger can do these things:
 
 
 <h2> Why did you do this? </h2>
-/////
+////
+
+
+<h2> Why tf is this code so bad? </h2>
+////
