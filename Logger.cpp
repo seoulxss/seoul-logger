@@ -437,12 +437,12 @@ bool Cseoul_logger::Create_Log_File(const std::string log_file_name, bool in_dir
 			if (std::filesystem::exists(Location))
 				std::filesystem::remove(Location);
 
-			else
-			{
-				Cseoul_logger::log_file_location = Location;
-				log_file.open(Location);
-				return true;
-			}
+			
+		
+			Cseoul_logger::log_file_location = Location;
+			Cseoul_logger::log_file.open(Location);
+			return true;
+			
 
 
 		}
