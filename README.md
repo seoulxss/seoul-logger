@@ -20,6 +20,7 @@ Currently the Logger can do these things:
  <li> Multiple log level with color support </li> 
  <li> Some helper functions to print hex and dec values  </li> 
  <li> Multiple logger objects </li>
+ <li> Changing colors of the different levels (soon) </li>
 </ol>
 
 <h2> What features are planned? </h2>
