@@ -67,7 +67,7 @@ namespace priv_logger
 
 	namespace helper
 	{
-		bool ShowMessageBox(const char* Text, const char* Title, bool beep);
+		bool ShowMessageBox(const char* Text, const char* Title, bool beep=true);
 
 
 	}
@@ -221,7 +221,7 @@ public:
 			return;
 	}
 
-	Cseoul_logger(LOG_MODE wish_log_mode, LOG_LEVEL wish_log_level) : log_mode(wish_log_mode), log_level(wish_log_level)
+	Cseoul_logger(LOG_MODE wish_log_mode=LOG_MODE::LOG_CONSOLE, LOG_LEVEL wish_log_level=LOG_LEVEL::LOG_ERROR) : log_mode(wish_log_mode), log_level(wish_log_level)
 	{
 		Init_Logger();
 	}
