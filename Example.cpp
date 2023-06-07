@@ -13,8 +13,10 @@ int main()
 	//How to create the object
 	//Gets init with console only & Successful level
 	//Both are the same!
+	//You can also create a object without these arguments
 	Cseoul_logger L1(Cseoul_logger::LOG_CONSOLE, Cseoul_logger::LOG_SUCCESSFUL);
 	Cseoul_logger L1_1(Cseoul_logger::LOG_MODE::LOG_CONSOLE, Cseoul_logger::LOG_LEVEL::LOG_SUCCESSFUL);
+	Cseoul_logger L1_2; //Will be initialized with Log_Console and Log_Error
 
 	//Printing with "Success" before the text and then also printing "Success!"
 	L1.Print("Success!");
@@ -39,7 +41,7 @@ int main()
 	//As you can see, you can leave the "name_of_application" var empty, it will not affect anything
 	//*WARNING* Don't ever put 0 or NULL or nullptr in these empty vars, it will crash!
 	//Create only one file per logger!
-	L1.Create_Log_File("Test_log_2", false, "C:\\Users\\teilo\\Desktop\\Test!", "");
+	L1.Create_Log_File("Test_log_2", false, "C:\\Users\\teilo\\Desktop\\Test", "");
 
 	//Here's the other way:
 	/* L1.Create_Log_File("Test_log_2", true, "", "Soul_logger.exe"); */
@@ -55,7 +57,7 @@ int main()
 	//The destructor will handle everything automatically
 	//*WARNING*: Only Shutdown at the end of your program!
 	//**************** READ LINE 120 ********************
-	L1.Shutdown_Logger();
+	//L1.Shutdown_Logger();
 
 
 	//														//
@@ -161,7 +163,6 @@ int main()
 	//Creating a new logger and vector
 	Cseoul_logger vector_logger(Cseoul_logger::LOG_CONSOLE, Cseoul_logger::LOG_SUCCESSFUL);
 	auto vector1 = std::vector<int>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-	vector1.reserve(20);
 
 	//Printing the vector at 0
 	vector_logger.Print(std::to_string(vector1.at(0)));
@@ -170,8 +171,18 @@ int main()
 	//Iteratung over a array:
 	//See Line 151, it's the same!
 
-
 	//Cseoul_logger new_test_logger(Cseoul_logger::LOG_MODE::LOG_CONSOLE, Cseoul_logger::Cseoul_logger::LOG_WARNING);
+
+
+
+	//														//
+	//														//
+	//				Color changing section					//
+	//														//
+	//														//
+
+	Cseoul_logger color_logger;
+
 
 
 	return 0;
