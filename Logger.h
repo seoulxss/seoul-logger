@@ -14,7 +14,7 @@
 	//														//
 
 
-
+//helper functions
 namespace Logger
 {
 
@@ -46,10 +46,11 @@ namespace Logger
 
 }
 
+//Private functions (Don't use)
 namespace priv_logger
 {
 
-		//You should never use this
+	//You should never use this
 	namespace LOG_COLOR__
 	{
 		constexpr unsigned short int COLOR_WHITE = 15;
@@ -75,6 +76,7 @@ namespace priv_logger
 
 }
 
+//A class which counts the objects of the logger class
 template<class Type>
 class CCounter
 {
@@ -111,12 +113,28 @@ size_t CCounter<Type>::Oustanding_Objects()
 template<class Type>
 size_t CCounter<Type>::total = 0;
 
+
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+/* Logging class */
+
+
 class Cseoul_logger : private CCounter<Cseoul_logger>
 {
 
-	//Log Level section
+
 public:
-	enum LOG_LEVEL 
+	//														//
+	//														//
+	/*					Log Level section					*/
+	//														//
+	//														//
+
+	static enum LOG_LEVEL 
 	{
 		LOG_GENERAL = 3,
 		LOG_WARNING = 2,
@@ -127,20 +145,14 @@ public:
 	[[nodiscard]] inline LOG_LEVEL get_log_level() const;
 	LOG_LEVEL set_log_level(LOG_LEVEL new_log_level);
 
-private:
-	LOG_LEVEL log_level = LOG_ERROR;
 
 
-
-
-
-
-
-
-
-	//log mode section
-public:
-
+	//														//
+	//														//
+	/*					Log mode section					*/
+	//														//
+	//														//				
+	
 	enum LOG_MODE
 	{
 		LOG_FILE_AND_CONSOLE = 2,
@@ -151,25 +163,15 @@ public:
 	[[nodiscard]] inline LOG_MODE get_log_mode() const;
 	LOG_MODE set_log_mode(LOG_MODE new_log_mode);
 
-private:
-	LOG_MODE log_mode = LOG_CONSOLE;
 
 
+	//														//
+	//														//
+	/*						Time section					*/
+	//														//
+	//														//	
+	
 
-
-
-
-
-
-
-
-	//Time section
-private:
-	static std::string get_current_time();
-	std::string current_time = get_current_time();
-	bool use_time = true;
-
-public:
 	//set to true, to show the current time before the message
 	//set to false to hide it
 	bool set_time_use(const bool val);
@@ -177,40 +179,119 @@ public:
 
 
 
+	//														//
+	//														//
+	/*						Console section					*/
+	//														//
+	//														//	
+	//EMPTY
 
 
 
+	//														//
+	//														//
+	/*						File section					*/
+	//														//
+	//														//	
 
-	//Console section
+
+
+	//This will create a .txt with a specific name
+	//log_file_name = this will be the name of the .txt
+	//in_directory = should it be in the exe's path? true / false
+	//Location = Put here the location if in_directory is FALSE if its true, leave it with ""
+	//name_of_application = Put the exe process name here with the ".exe"
+	bool Create_Log_File(const std::string log_file_name, bool in_directory, std::string Location, std::string name_of_application);
+	[[nodiscard]] std::ofstream get_current_file();
+
+
 private:
+	//														//
+	//														//
+	/*					Log Level section					*/
+	//														//
+	//														//
+
+	LOG_LEVEL log_level = LOG_ERROR;
+
+
+
+	//														//
+	//														//
+	/*					Log mode section					*/
+	//														//
+	//														//	
+
+	LOG_MODE log_mode = LOG_CONSOLE;
+
+
+
+	//														//
+	//														//
+	/*						Time section					*/
+	//														//
+	//														//	
+
+	bool use_time = true;
+
+	static std::string get_current_time();
+
+
+
+	//														//
+	//														//
+	/*						Console section					*/
+	//														//
+	//				
+
 	HANDLE console_handle = nullptr;
-	bool close_console_handle() const;
 	bool Console_already_There = false;
 
-private:
+	bool close_console_handle() const;
 	[[nodiscard]] HANDLE get_console_handle() const;
 	HANDLE set_console_handle();
 
 
 
+	//														//
+	//														//
+	/*						File section					*/
+	//														//
+	//														//	
+
+	inline static bool init_log = false;
+	FILE* file_p;
+	std::ofstream log_file;
+	std::string log_file_location;
+
+	std::string get_exe_file_name();
 
 
 
-
-
-
-	//function section
+	//														//
+	//														//
+	/*					Main Func Section					*/
+	//														//
+	//														//	
 public:
 
+	//This will init the logger
+	//You don't need to call this, since it gets called automatically
 	bool Init_Logger();
+
+	//THis will shutdown the logger
+	//You don't need to call this, it will be called automatically
+	//WARNING: It is adviceable to watch the Example.cpp!!!!!
 	bool Shutdown_Logger();
 
 	//This will print the string in the Console or file or both!
 	//If u want to print other things, see the Example.cpp
 	void Print(const std::string &text);
 
-
-	bool already_down = false;
+	Cseoul_logger(LOG_MODE wish_log_mode=LOG_MODE::LOG_CONSOLE, LOG_LEVEL wish_log_level=LOG_LEVEL::LOG_ERROR) : log_mode(wish_log_mode), log_level(wish_log_level)
+	{
+		Init_Logger();
+	}
 
 	~Cseoul_logger()
 	{
@@ -221,41 +302,12 @@ public:
 			return;
 	}
 
-	Cseoul_logger(LOG_MODE wish_log_mode=LOG_MODE::LOG_CONSOLE, LOG_LEVEL wish_log_level=LOG_LEVEL::LOG_ERROR) : log_mode(wish_log_mode), log_level(wish_log_level)
-	{
-		Init_Logger();
-	}
-
-
-	
-
-
-
-
-
-
-	//File section
-private:
-	std::string get_exe_file_name();
-
-
-public:
-	//This will create a .txt with a specific name
-	//log_file_name = this will be the name of the .txt
-	//in_directory = should it be in the exe's path? true / false
-	//Location = Put here the location if in_directory is FALSE if its true, leave it with ""
-	//name_of_application = Put the exe process name here with the ".exe"
-	bool Create_Log_File(const std::string log_file_name, bool in_directory, std::string Location, std::string name_of_application);
-	[[nodiscard]] std::ofstream get_current_file();
-
 
 
 
 private:
-	inline static bool init_log = false;
-	FILE* file_p;
-	std::ofstream log_file;
-	std::string log_file_location;
+	bool already_down = false;
+
 
 
 
