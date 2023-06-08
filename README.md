@@ -33,4 +33,4 @@ This is actually my first ever project on GitHub. I wanted to publish something 
 
 
 <h2> Why tf is this code so bad? </h2>
-I don't want to make it as clean as possible if I start coding. I firstly make it work and then revisit it and fix everything up. Then I try to optimize everything.
+When I start coding on a project I don't want it to be perfect. I firstly make it work and then revisit it and fix everything up. Then I try to optimize everything.
