@@ -175,7 +175,6 @@ public:
 	//set to true, to show the current time before the message
 	//set to false to hide it
 	bool set_time_use(const bool val);
-	bool get_time_use() const;
 
 
 
@@ -201,7 +200,7 @@ public:
 	//in_directory = should it be in the exe's path? true / false
 	//Location = Put here the location if in_directory is FALSE if its true, leave it with ""
 	//name_of_application = Put the exe process name here with the ".exe"
-	bool Create_Log_File(const std::string log_file_name, bool in_directory, std::string Location, std::string name_of_application);
+	bool Create_Log_File(const std::string& log_file_name, bool in_directory, std::string Location, const std::string& name_of_application);
 	[[nodiscard]] std::ofstream get_current_file();
 
 
@@ -235,7 +234,7 @@ private:
 	bool use_time = true;
 
 	static std::string get_current_time();
-
+	bool get_time_use() const;
 
 
 	//														//
@@ -264,7 +263,7 @@ private:
 	std::ofstream log_file;
 	std::string log_file_location;
 
-	std::string get_exe_file_name();
+	static std::string get_exe_file_name();
 
 
 
