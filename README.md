@@ -23,8 +23,9 @@ Currently the Logger can do these things:
 </ol>
 
 <h2> What features are planned? </h2>
+<ol>
  <li> Changing colors of the different levels (soon) </li>
-
+</ol>
 
 
 <h2> Why did you do this? </h2>
