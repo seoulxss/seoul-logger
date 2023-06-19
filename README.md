@@ -1,6 +1,6 @@
 # seoul-logger
 
-<p> A very <s>small</s>s> c++ logging class which can be used in a DLL application and a console only app aswell</p>
+<p> A very <s>small</s> c++ logging class which can be used in a DLL application and a console only app aswell</p>
 Here's how it looks like:
 <br><img src="https://github.com/seoulxss/seoul-logger/assets/91141907/e265b53c-1f29-416c-9142-7c8c94c25662"></br>
 
