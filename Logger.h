@@ -134,7 +134,7 @@ public:
 	//														//
 	//														//
 
-	static enum LOG_LEVEL 
+	enum LOG_LEVEL 
 	{
 		LOG_GENERAL = 3,
 		LOG_WARNING = 2,
@@ -258,7 +258,7 @@ private:
 	//														//
 	//														//	
 
-	inline static bool init_log = false;
+	bool init_log = false;
 	FILE* file_p;
 	std::ofstream log_file;
 	std::string log_file_location;
@@ -317,4 +317,3 @@ private:
 
 
 };
-
