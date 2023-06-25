@@ -5,7 +5,7 @@
 #include <windows.h>
 #include <string>
 #include <fstream>
-#include <iostream>
+
 
 	//														//
 	//														//
@@ -23,7 +23,7 @@ namespace Logger
 	{
 
 		template<typename Type>
-		constexpr std::string value_to_string_hex(Type value)
+		constexpr std::string value_to_string_hex(const Type& value)
 		{
 			std::stringstream hex_val_ss;
 			hex_val_ss << "0x" << std::hex << value;
@@ -32,7 +32,7 @@ namespace Logger
 		}
 
 		template<typename Type>
-		constexpr std::string value_to_string_dec(Type value)
+		constexpr std::string value_to_string_dec(const Type& value)
 		{
 			std::stringstream val_ss;
 			val_ss << std::dec << value;
@@ -68,7 +68,7 @@ namespace priv_logger
 
 	namespace helper
 	{
-		bool ShowMessageBox(const char* Text, const char* Title, bool beep=true);
+		constexpr bool ShowMessageBox(const char* Text, const char* Title, bool beep=true);
 
 
 	}
@@ -142,8 +142,8 @@ public:
 		LOG_SUCCESSFUL = 0,
 	};
 
-	[[nodiscard]] inline LOG_LEVEL get_log_level() const;
-	LOG_LEVEL set_log_level(LOG_LEVEL new_log_level);
+	[[nodiscard]] constexpr LOG_LEVEL get_log_level() const &;
+	LOG_LEVEL set_log_level(LOG_LEVEL new_log_level) &;
 
 
 
@@ -160,8 +160,8 @@ public:
 		LOG_CONSOLE = 0,
 	};
 
-	[[nodiscard]] inline LOG_MODE get_log_mode() const;
-	LOG_MODE set_log_mode(LOG_MODE new_log_mode);
+	[[nodiscard]] constexpr LOG_MODE get_log_mode() const &;
+	LOG_MODE set_log_mode(LOG_MODE new_log_mode) &;
 
 
 
@@ -174,7 +174,7 @@ public:
 
 	//set to true, to show the current time before the message
 	//set to false to hide it
-	bool set_time_use(const bool val);
+	bool set_time_use(const bool& val) &;
 
 
 
@@ -200,8 +200,7 @@ public:
 	//in_directory = should it be in the exe's path? true / false
 	//Location = Put here the location if in_directory is FALSE if its true, leave it with ""
 	//name_of_application = Put the exe process name here with the ".exe"
-	bool Create_Log_File(const std::string& log_file_name, bool in_directory, std::string Location, const std::string& name_of_application);
-	[[nodiscard]] std::ofstream get_current_file();
+	bool Create_Log_File(const std::string& log_file_name, bool in_directory, std::string Location, const std::string& name_of_application) &;
 
 
 private:
@@ -211,7 +210,7 @@ private:
 	//														//
 	//														//
 
-	LOG_LEVEL log_level = LOG_ERROR;
+	LOG_LEVEL m_log_level_ = LOG_ERROR;
 
 
 
@@ -221,7 +220,7 @@ private:
 	//														//
 	//														//	
 
-	LOG_MODE log_mode = LOG_CONSOLE;
+	LOG_MODE m_log_mode_ = LOG_CONSOLE;
 
 
 
@@ -231,10 +230,10 @@ private:
 	//														//
 	//														//	
 
-	bool use_time = true;
+	bool m_use_time_ = true;
 
 	static std::string get_current_time();
-	bool get_time_use() const;
+	constexpr bool get_time_use() const;
 
 
 	//														//
@@ -243,12 +242,12 @@ private:
 	//														//
 	//				
 
-	HANDLE console_handle = nullptr;
-	bool Console_already_There = false;
+	HANDLE* m_console_handle_ = nullptr;
+	bool m_console_already_there_ = false;
 
 	bool close_console_handle() const;
-	[[nodiscard]] HANDLE get_console_handle() const;
-	HANDLE set_console_handle();
+	[[nodiscard]] constexpr HANDLE* get_console_handle() const;
+	HANDLE* set_console_handle() &;
 
 
 
@@ -258,10 +257,13 @@ private:
 	//														//
 	//														//	
 
-	bool init_log = false;
-	FILE* file_p;
-	std::ofstream log_file;
-	std::string log_file_location;
+	bool m_init_log_ = false;
+	FILE* m_file_p_;
+	std::ofstream m_log_file_;
+	std::string m_log_file_location_;
+
+	constexpr std::string get_log_file_loc() const;
+	std::string set_log_file_loc(const std::string& new_loc) &;
 
 	static std::string get_exe_file_name();
 
@@ -285,16 +287,16 @@ public:
 
 	//This will print the string in the Console or file or both!
 	//If u want to print other things, see the Example.cpp
-	void Print(const std::string &text);
+	void Print(const std::string &text); 
 
-	Cseoul_logger(LOG_MODE wish_log_mode=LOG_MODE::LOG_CONSOLE, LOG_LEVEL wish_log_level=LOG_LEVEL::LOG_ERROR) : log_mode(wish_log_mode), log_level(wish_log_level)
+	explicit Cseoul_logger(LOG_MODE wish_log_mode = LOG_MODE::LOG_CONSOLE, LOG_LEVEL wish_log_level = LOG_LEVEL::LOG_ERROR) : m_log_level_(wish_log_level), m_log_mode_(wish_log_mode)
 	{
 		Init_Logger();
 	}
 
 	~Cseoul_logger()
 	{
-		if (already_down == false)
+		if (m_already_down_ == false)
 			Shutdown_Logger();
 
 		else
@@ -305,7 +307,7 @@ public:
 
 
 private:
-	bool already_down = false;
+	bool m_already_down_ = false;
 
 
 
@@ -317,3 +319,6 @@ private:
 
 
 };
+
+
+
