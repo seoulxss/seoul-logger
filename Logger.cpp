@@ -1,6 +1,8 @@
 #include "Logger.h"
+#include <iostream>
 
-bool priv_logger::helper::ShowMessageBox(const char* Text, const char* Title, bool beep)
+//Helper function which shows a messageBox
+constexpr bool priv_logger::helper::ShowMessageBox(const char* Text, const char* Title, bool beep)
 {
 	if (beep == true)
 	{
@@ -16,25 +18,27 @@ bool priv_logger::helper::ShowMessageBox(const char* Text, const char* Title, bo
 	}
 }
 
-
-inline Cseoul_logger::LOG_LEVEL Cseoul_logger::get_log_level() const
+//getter of log_level
+constexpr Cseoul_logger::LOG_LEVEL Cseoul_logger::get_log_level() const &
 {
-	return this->log_level;
+	return this->m_log_level_;
 }
 
-Cseoul_logger::LOG_LEVEL Cseoul_logger::set_log_level(const LOG_LEVEL new_log_level)
+//setter of log_level
+Cseoul_logger::LOG_LEVEL Cseoul_logger::set_log_level(const LOG_LEVEL new_log_level) &
 {
-	return this->log_level = new_log_level;
+	return this->m_log_level_ = new_log_level;
 }
 
-inline Cseoul_logger::LOG_MODE Cseoul_logger::get_log_mode() const
+//getter of log_mode
+constexpr Cseoul_logger::LOG_MODE Cseoul_logger::get_log_mode() const &
 {
-	return this->log_mode;
+	return this->m_log_mode_;
 }
 
-Cseoul_logger::LOG_MODE Cseoul_logger::set_log_mode(const LOG_MODE new_log_mode)
+Cseoul_logger::LOG_MODE Cseoul_logger::set_log_mode(const LOG_MODE new_log_mode) &
 {
-	return this->log_mode = new_log_mode;
+	return this->m_log_mode_ = new_log_mode;
 }
 
 std::string Cseoul_logger::get_current_time()
@@ -50,49 +54,54 @@ std::string Cseoul_logger::get_current_time()
 	return oss.str();
 }
 
-bool Cseoul_logger::set_time_use(const bool val)
+bool Cseoul_logger::set_time_use(const bool& val)  &
 {
-	return this->use_time = val;
+	return this->m_use_time_ = val;
 }
 
-bool Cseoul_logger::get_time_use() const
+constexpr bool Cseoul_logger::get_time_use() const
 {
-	return this->use_time;
+	return this->m_use_time_;
 }
 
-HANDLE Cseoul_logger::get_console_handle() const
+constexpr HANDLE* Cseoul_logger::get_console_handle() const
 {
-	return this->console_handle;
+	return this->m_console_handle_;
 }
 
-HANDLE Cseoul_logger::set_console_handle()
+constexpr std::string Cseoul_logger::get_log_file_loc() const
 {
-	return this->console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	return this->m_log_file_location_;
+}
+
+HANDLE* Cseoul_logger::set_console_handle() &
+{
+	return this->m_console_handle_ = reinterpret_cast<HANDLE*>(GetStdHandle(STD_OUTPUT_HANDLE));
 }
 
 //Make sure to call Create_log_file when u want to log into a file!
 //This also gets called automatically, so no need to call it again.
 bool Cseoul_logger::Init_Logger()
 {
-	if (Cseoul_logger::init_log == false)
-		Cseoul_logger::init_log = true;
+	if (Cseoul_logger::m_init_log_ == false)
+		Cseoul_logger::m_init_log_ = true;
 
-	else if (Cseoul_logger::init_log == true)
+	else if (Cseoul_logger::m_init_log_ == true)
 		return true;
 
 	if (Cseoul_logger::get_log_mode() == LOG_CONSOLE || Cseoul_logger::get_log_mode() == LOG_FILE_AND_CONSOLE)
 	{
 		if (Cseoul_logger::set_console_handle() != nullptr)
-			Console_already_There = true;
+			m_console_already_there_ = true;
 
 		if (Cseoul_logger::get_console_handle() == nullptr)
 		{
 			AllocConsole();
-			freopen_s(&file_p, "CONOUT$", "w", stdout);
+			freopen_s(&m_file_p_, "CONOUT$", "w", stdout);
 		}
 
 
-		if (Cseoul_logger::get_console_handle() == NULL)
+		if (Cseoul_logger::get_console_handle() == nullptr)
 			Cseoul_logger::set_console_handle();
 
 
@@ -147,10 +156,10 @@ bool Cseoul_logger::Init_Logger()
 
 bool Cseoul_logger::close_console_handle() const
 {
-	if (Cseoul_logger::get_console_handle() == NULL || Cseoul_logger::get_console_handle() == INVALID_HANDLE_VALUE)
+	if (Cseoul_logger::get_console_handle() == nullptr || Cseoul_logger::get_console_handle() == INVALID_HANDLE_VALUE)
 		return false;
 
-	else if (Cseoul_logger::get_console_handle() != NULL && this->Console_already_There == true)
+	else if (Cseoul_logger::get_console_handle() != nullptr && this->m_console_already_there_ == true)
 	{
 		CloseHandle(Cseoul_logger::get_console_handle());
 		return true;
@@ -164,18 +173,18 @@ bool Cseoul_logger::Shutdown_Logger()
 	if (CCounter::Oustanding_Objects() == 1)
 		FreeConsole();
 
-	if (file_p)
-		fclose(file_p);
+	if (m_file_p_)
+		fclose(m_file_p_);
 
-	file_p = nullptr;
+	m_file_p_ = nullptr;
 
 	if (Cseoul_logger::get_console_handle() != nullptr && Cseoul_logger::get_console_handle() != INVALID_HANDLE_VALUE && CCounter::Oustanding_Objects() == 1)
 		Cseoul_logger::close_console_handle();
 
-	if (log_file.is_open())
-		log_file.close();
+	if (m_log_file_.is_open())
+		m_log_file_.close();
 
-	already_down = true;
+	m_already_down_ = true;
 
 
 	return true;
@@ -187,6 +196,9 @@ void Cseoul_logger::Print(const std::string& text)
 	if (Cseoul_logger::get_log_mode() == Cseoul_logger::LOG_FILE_AND_CONSOLE)
 	{
 		//Check if file is open etc..
+		if (!Cseoul_logger::m_log_file_.is_open())
+			m_log_file_.open(Cseoul_logger::m_log_file_location_);
+
 
 
 		switch (Cseoul_logger::get_log_level())
@@ -203,8 +215,8 @@ void Cseoul_logger::Print(const std::string& text)
 				SetConsoleTextAttribute(Cseoul_logger::get_console_handle(), priv_logger::LOG_COLOR__::COLOR_WHITE);
 				std::cout << "]" << " >> " << text << priv_logger::LOG_MACRO__::ENDL;
 				const auto temp_time = get_current_time();
-				log_file << "{" + temp_time + "}" + "[" + "LOG_GENERAL" + "]" + " >> " + text <<
-					priv_logger::LOG_MACRO__::ENDL;
+				m_log_file_ << "{" + temp_time + "}" + "[" + "LOG_GENERAL" + "]" + " >> " + text << priv_logger::LOG_MACRO__::ENDL;
+				m_log_file_.close();
 				break;
 
 				//Clsoe the file again
@@ -222,8 +234,8 @@ void Cseoul_logger::Print(const std::string& text)
 				SetConsoleTextAttribute(Cseoul_logger::get_console_handle(), priv_logger::LOG_COLOR__::COLOR_WHITE);
 				std::cout << "]" << " >> " << text << priv_logger::LOG_MACRO__::ENDL;
 				const auto temp_time = Cseoul_logger::get_current_time();
-				log_file << "{" + temp_time + "}" + "[" + "LOG_ERROR" + "]" + " >> " + text <<
-					priv_logger::LOG_MACRO__::ENDL;
+				m_log_file_ << "{" + temp_time + "}" + "[" + "LOG_ERROR" + "]" + " >> " + text << priv_logger::LOG_MACRO__::ENDL;
+				m_log_file_.close();
 				break;
 			}
 
@@ -239,8 +251,8 @@ void Cseoul_logger::Print(const std::string& text)
 				SetConsoleTextAttribute(Cseoul_logger::get_console_handle(), priv_logger::LOG_COLOR__::COLOR_WHITE);
 				std::cout << "]" << " >> " << text << priv_logger::LOG_MACRO__::ENDL;
 				const auto temp_time = Cseoul_logger::get_current_time();
-				log_file << "{" + temp_time + "}" + "[" + "LOG_SUCCESSFUL" + "]" + " >> " + text <<
-					priv_logger::LOG_MACRO__::ENDL;
+				m_log_file_ << "{" + temp_time + "}" + "[" + "LOG_SUCCESSFUL" + "]" + " >> " + text << priv_logger::LOG_MACRO__::ENDL;
+				m_log_file_.close();
 				break;
 			}
 
@@ -256,8 +268,8 @@ void Cseoul_logger::Print(const std::string& text)
 				SetConsoleTextAttribute(Cseoul_logger::get_console_handle(), priv_logger::LOG_COLOR__::COLOR_WHITE);
 				std::cout << "]" << " >> " << text << priv_logger::LOG_MACRO__::ENDL;
 				const auto temp_time = Cseoul_logger::get_current_time();
-				log_file << "{" + temp_time + "}" + "[" + "LOG_WARNING" + "]" + " >> " + text <<
-					priv_logger::LOG_MACRO__::ENDL;
+				m_log_file_ << "{" + temp_time + "}" + "[" + "LOG_WARNING" + "]" + " >> " + text << priv_logger::LOG_MACRO__::ENDL;
+				m_log_file_.close();
 				break;
 			}
 
@@ -336,48 +348,52 @@ void Cseoul_logger::Print(const std::string& text)
 
 	else if (Cseoul_logger::get_log_mode() == LOG_FILE)
 	{
+
+		if (!Cseoul_logger::m_log_file_.is_open())
+			m_log_file_.open(this->m_log_file_location_);
+
 		switch (get_log_level())
 		{
 			[[unlikely]]case LOG_LEVEL::LOG_GENERAL:
 			{
-				if (log_file.is_open())
+				if (m_log_file_.is_open())
 				{
 					const auto temp_time = Cseoul_logger::get_current_time();
-					log_file << "{" + temp_time + "}" + "[" + "LOG_GENERAL" + "]" + " >> " + text <<
-						priv_logger::LOG_MACRO__::ENDL;
+					m_log_file_ << "{" + temp_time + "}" + "[" + "LOG_GENERAL" + "]" + " >> " + text << priv_logger::LOG_MACRO__::ENDL;
+					m_log_file_.close();
 					break;
 				}
 				break;
 			}
 			[[likely]]case LOG_LEVEL::LOG_ERROR:
 			{
-				if (log_file.is_open())
+				if (m_log_file_.is_open())
 				{
 					const auto temp_time = Cseoul_logger::get_current_time();
-					log_file << "{" + temp_time + "}" + "[" + "LOG_ERROR" + "]" + " >> " + text <<
-						priv_logger::LOG_MACRO__::ENDL;
+					m_log_file_ << "{" + temp_time + "}" + "[" + "LOG_ERROR" + "]" + " >> " + text << priv_logger::LOG_MACRO__::ENDL;
+					m_log_file_.close();
 					break;
 				}
 				break;
 			}
 			[[likely]]case LOG_LEVEL::LOG_SUCCESSFUL:
 			{
-				if (log_file.is_open())
+				if (m_log_file_.is_open())
 				{
 					const auto temp_time = Cseoul_logger::get_current_time();
-					log_file << "{" + temp_time + "}" + "[" + "LOG_SUCCESSFUL" + "]" + " >> " + text <<
-						priv_logger::LOG_MACRO__::ENDL;
+					m_log_file_ << "{" + temp_time + "}" + "[" + "LOG_SUCCESSFUL" + "]" + " >> " + text << priv_logger::LOG_MACRO__::ENDL;
+					m_log_file_.close();
 					break;
 				}
 				break;
 			}
 		case LOG_LEVEL::LOG_WARNING:
 			{
-				if (log_file.is_open())
+				if (m_log_file_.is_open())
 				{
 					const auto temp_time = Cseoul_logger::get_current_time();
-					log_file << "{" + temp_time + "}" + "[" + "LOG_WARNING" + "]" + " >> " + text <<
-						priv_logger::LOG_MACRO__::ENDL;
+					m_log_file_ << "{" + temp_time + "}" + "[" + "LOG_WARNING" + "]" + " >> " + text << priv_logger::LOG_MACRO__::ENDL;
+					m_log_file_.close();
 					break;
 				}
 				break;
@@ -389,8 +405,13 @@ void Cseoul_logger::Print(const std::string& text)
 	{
 		MessageBeep(MB_ICONERROR);
 		MessageBoxA(nullptr, "Weird!", "test!", 0);
-		return;
+		
 	}
+}
+
+std::string Cseoul_logger::set_log_file_loc(const std::string& new_loc) &
+{
+	return this->m_log_file_location_ = new_loc;
 }
 
 std::string Cseoul_logger::get_exe_file_name()
@@ -401,7 +422,7 @@ std::string Cseoul_logger::get_exe_file_name()
 }
 
 bool Cseoul_logger::Create_Log_File(const std::string& log_file_name, bool in_directory, std::string Location,
-                                    const std::string& name_of_application)
+                                    const std::string& name_of_application) &
 {
 	if (in_directory == true && log_file_name.empty() != true)
 	{
@@ -421,7 +442,8 @@ bool Cseoul_logger::Create_Log_File(const std::string& log_file_name, bool in_di
 		if (std::filesystem::exists(log))
 			std::filesystem::remove(log);
 
-		log_file.open(log);
+		Cseoul_logger::set_log_file_loc(log);
+		m_log_file_.open(log);
 		return true;
 	}
 
@@ -437,8 +459,8 @@ bool Cseoul_logger::Create_Log_File(const std::string& log_file_name, bool in_di
 				std::filesystem::remove(Location);
 
 
-			Cseoul_logger::log_file_location = Location;
-			Cseoul_logger::log_file.open(Location);
+			Cseoul_logger::set_log_file_loc(Location);
+			Cseoul_logger::m_log_file_.open(Location);
 			return true;
 		}
 	}
