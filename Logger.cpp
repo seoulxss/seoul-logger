@@ -81,7 +81,7 @@ HANDLE* Cseoul_logger::set_console_handle() &
 
 //Make sure to call Create_log_file when u want to log into a file!
 //This also gets called automatically, so no need to call it again.
-bool Cseoul_logger::Init_Logger()
+bool Cseoul_logger::Init_Logger() noexcept
 {
 	if (Cseoul_logger::m_init_log_ == false)
 		Cseoul_logger::m_init_log_ = true;
@@ -168,7 +168,7 @@ bool Cseoul_logger::close_console_handle() const
 	return false;
 }
 
-bool Cseoul_logger::Shutdown_Logger()
+bool Cseoul_logger::Shutdown_Logger() noexcept
 {
 	if (CCounter::Oustanding_Objects() == 1)
 		FreeConsole();
@@ -197,7 +197,7 @@ void Cseoul_logger::Print(const std::string& text)
 	{
 		//Check if file is open etc..
 		if (!Cseoul_logger::m_log_file_.is_open())
-			m_log_file_.open(Cseoul_logger::m_log_file_location_);
+			m_log_file_.open(Cseoul_logger::m_log_file_location_, std::ios_base::app);
 
 
 
@@ -350,7 +350,7 @@ void Cseoul_logger::Print(const std::string& text)
 	{
 
 		if (!Cseoul_logger::m_log_file_.is_open())
-			m_log_file_.open(this->m_log_file_location_);
+			m_log_file_.open(this->m_log_file_location_, std::ios_base::app);
 
 		switch (get_log_level())
 		{
@@ -409,12 +409,12 @@ void Cseoul_logger::Print(const std::string& text)
 	}
 }
 
-std::string Cseoul_logger::set_log_file_loc(const std::string& new_loc) &
+std::string Cseoul_logger::set_log_file_loc(const std::string& new_loc) & noexcept
 {
 	return this->m_log_file_location_ = new_loc;
 }
 
-std::string Cseoul_logger::get_exe_file_name()
+std::string Cseoul_logger::get_exe_file_name() noexcept
 {
 	char buff[MAX_PATH];
 	GetModuleFileNameA(nullptr, buff, MAX_PATH);
@@ -443,7 +443,7 @@ bool Cseoul_logger::Create_Log_File(const std::string& log_file_name, bool in_di
 			std::filesystem::remove(log);
 
 		Cseoul_logger::set_log_file_loc(log);
-		m_log_file_.open(log);
+		m_log_file_.open(log, std::ios_base::app);
 		return true;
 	}
 
@@ -460,7 +460,7 @@ bool Cseoul_logger::Create_Log_File(const std::string& log_file_name, bool in_di
 
 
 			Cseoul_logger::set_log_file_loc(Location);
-			Cseoul_logger::m_log_file_.open(Location);
+			Cseoul_logger::m_log_file_.open(Location, std::ios_base::app);
 			return true;
 		}
 	}
