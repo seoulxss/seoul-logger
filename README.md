@@ -34,3 +34,4 @@ This is actually my first ever project on GitHub. I wanted to publish something 
 
 <h2> Why tf is this code so bad? </h2>
 When I start coding on a project I don't want it to be perfect. I firstly make it work and then revisit it and fix everything up. Then I try to optimize everything.
+Also, please keep in mind, that I am still learning.
