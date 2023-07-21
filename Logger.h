@@ -1,5 +1,5 @@
 #pragma once
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS    //Dangerous
 
 #include <filesystem>
 #include <windows.h>
@@ -263,9 +263,9 @@ private:
 	std::string m_log_file_location_;
 
 	constexpr std::string get_log_file_loc() const;
-	std::string set_log_file_loc(const std::string& new_loc) &;
+	std::string set_log_file_loc(const std::string& new_loc) & noexcept;
 
-	static std::string get_exe_file_name();
+	static std::string get_exe_file_name() noexcept;
 
 
 
@@ -278,12 +278,12 @@ public:
 
 	//This will init the logger
 	//You don't need to call this, since it gets called automatically
-	bool Init_Logger();
+	bool Init_Logger() noexcept;
 
 	//THis will shutdown the logger
 	//You don't need to call this, it will be called automatically
 	//WARNING: It is adviceable to watch the Example.cpp!!!!!
-	bool Shutdown_Logger();
+	bool Shutdown_Logger() noexcept;
 
 	//This will print the string in the Console or file or both!
 	//If u want to print other things, see the Example.cpp
@@ -294,7 +294,7 @@ public:
 		Init_Logger();
 	}
 
-	~Cseoul_logger()
+	~Cseoul_logger() noexcept
 	{
 		if (m_already_down_ == false)
 			Shutdown_Logger();
