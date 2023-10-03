@@ -1,5 +1,10 @@
 # seoul-logger
 
+<h1> DONT USE IT</h1>
+<p>I've stopped working on this as I don't have much time and motivation to improve it. It's not finished yet and the performance is bad as hell I think. Don't use it unless I've done a complete rewrite on it.</p>
+
+
+
 <p> A very small c++ logging class which can be used in a DLL application and a console only app aswell</p>
 Here's how it looks like:
 <br><img src="https://github.com/seoulxss/seoul-logger/assets/91141907/e265b53c-1f29-416c-9142-7c8c94c25662"></br>
