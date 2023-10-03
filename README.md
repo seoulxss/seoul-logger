@@ -1,7 +1,7 @@
 # seoul-logger
 
 <h1> DONT USE IT</h1>
-<p>I've stopped working on this as I don't have much time and motivation to improve it. It's not finished yet and the performance is bad as hell I think. Don't use it unless I've done a complete rewrite on it.</p>
+<p>I stopped working on it as I don't have much time and motivation to improve it. It's not finished yet and the performance is pretty damn bad in my opinion. Don't use it unless I've completely rewritten it.</p>
 
 
 
